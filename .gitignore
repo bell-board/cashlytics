@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Test coverage reports
+coverage/
+
+# Environment variables (kalau nanti ada API key/secret)
+.env
+.env.local
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE folder
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Kiro internal state (opsional — lihat penjelasan di bawah)
+.kiro/specs/**/.config.kiro
+.kiro/specs/**/tasks.meta.json

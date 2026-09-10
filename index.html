@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cashlytics</title>
+
+    <!-- Google Fonts: Nunito — rounded, friendly, perfect for a pastel app -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+    />
+
+    <!-- Chart.js from CDN — required for category breakdown chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+
+    <!-- App stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- =============================================
+         Inline error banners (hidden by default)
+         Shown when localStorage is unavailable or data is corrupt
+    ============================================= -->
+    <div id="error-storage" class="error-banner" hidden>
+      ⚠️ Local storage is unavailable. Your data cannot be saved this session.
+    </div>
+    <div id="error-data" class="error-banner" hidden>
+      ⚠️ Saved data could not be loaded and has been reset.
+    </div>
+
+    <!-- =============================================
+         App Header — fixed at top on all viewports
+         Change 3: Cashlytics branding header
+    ============================================= -->
+    <header id="app-header">
+      <h1 class="app-title">Cashlytics</h1>
+      <p class="app-tagline">Track your spending, the fun way</p>
+    </header>
+
+    <!-- =============================================
+         Tab Bar — top (below header) on desktop, bottom on mobile
+         Requirement: 8.1, 8.2, 8.3
+    ============================================= -->
+    <nav id="tab-bar" role="navigation" aria-label="Main navigation">
+      <button
+        class="tab-btn tab--active"
+        data-tab="dashboard"
+        aria-controls="panel-dashboard"
+        aria-selected="true"
+        type="button"
+      >
+        📊 Dashboard
+      </button>
+      <button
+        class="tab-btn"
+        data-tab="add"
+        aria-controls="panel-add"
+        aria-selected="false"
+        type="button"
+      >
+        ➕ Add Transaction
+      </button>
+      <button
+        class="tab-btn"
+        data-tab="history"
+        aria-controls="panel-history"
+        aria-selected="false"
+        type="button"
+      >
+        🗂️ History
+      </button>
+    </nav>
+
+    <!-- =============================================
+         Main content area — holds all three panels
+    ============================================= -->
+    <main id="main-content">
+
+      <!-- ==========================================
+           Panel: Dashboard
+           Shows summary stats and the spending chart
+      =========================================== -->
+      <section id="panel-dashboard" class="tab-panel" role="tabpanel" aria-labelledby="tab-dashboard">
+
+        <!-- Filter Bar — shared date-range control -->
+        <div id="filter-bar">
+          <label for="filter-preset" class="sr-only">Filter by date</label>
+          <select id="filter-preset" aria-label="Date filter preset">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+
+          <!-- Custom date range inputs — hidden unless "Custom Range" is selected -->
+          <div id="filter-custom" class="filter-custom" hidden>
+            <label for="filter-start">From</label>
+            <input id="filter-start" type="date" aria-label="Filter start date" />
+            <label for="filter-end">To</label>
+            <input id="filter-end" type="date" aria-label="Filter end date" />
+            <span id="filter-range-error" class="error-msg" hidden>
+              Start date cannot be later than end date.
+            </span>
+          </div>
+        </div>
+
+        <!-- Summary stat cards — Change 4: income/expense/balance -->
+        <div class="stat-cards">
+          <div class="stat-card" id="stat-income-card">
+            <p class="stat-label">💰 Period Income</p>
+            <p id="stat-income" class="stat-value stat-income-value">Rp 0</p>
+          </div>
+          <div class="stat-card" id="stat-expense-card">
+            <p class="stat-label">💸 Period Expense</p>
+            <p id="stat-expense" class="stat-value stat-expense-value">Rp 0</p>
+          </div>
+          <div class="stat-card" id="stat-balance-card">
+            <p class="stat-label">⚖️ Net Balance</p>
+            <p id="stat-balance" class="stat-value">Rp 0</p>
+          </div>
+          <div class="stat-card stat-top-card" id="stat-top-category-card">
+            <p class="stat-label">🏆 Top Expense Category</p>
+            <p id="stat-top-category" class="stat-value">No data</p>
+          </div>
+        </div>
+
+        <!-- Chart area — Change 1: chart-data-toggle + resized canvas -->
+        <div class="chart-container">
+          <div class="chart-controls">
+            <button id="chart-toggle" type="button">Switch to Bar Chart</button>
+            <button id="chart-data-toggle" type="button">Viewing: Expenses → Switch to Income</button>
+          </div>
+          <!-- Change 1: .chart-area wrapper for size constraints -->
+          <div class="chart-area">
+            <canvas id="chart-canvas" aria-label="Spending by category chart" role="img"></canvas>
+          </div>
+          <p id="chart-error" class="chart-error" hidden>
+            📉 Chart unavailable — the charting library could not be loaded.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           Panel: Add Transaction (Change 4)
+           Contains the expense/income entry form
+      =========================================== -->
+      <section id="panel-add" class="tab-panel" role="tabpanel" aria-labelledby="tab-add" hidden>
+
+        <!-- Change 4: Transaction type toggle -->
+        <div id="type-toggle" class="type-toggle">
+          <button type="button" class="type-btn type-btn--active" data-type="expense">💸 Expense</button>
+          <button type="button" class="type-btn" data-type="income">💰 Income</button>
+        </div>
+
+        <form id="expense-form" novalidate>
+          <h2 id="form-heading">Add Expense</h2>
+
+          <input type="hidden" id="editing-id" />
+
+          <!-- Expense / Income Name -->
+          <div class="form-group">
+            <label for="input-name">Name</label>
+            <input
+              id="input-name"
+              type="text"
+              placeholder="e.g. Mie Goreng"
+              maxlength="100"
+              autocomplete="off"
+            />
+            <span class="error-msg" id="error-name" aria-live="polite"></span>
+          </div>
+
+          <!-- Amount -->
+          <div class="form-group">
+            <label for="input-amount">Amount (Rp)</label>
+            <input
+              id="input-amount"
+              type="number"
+              placeholder="e.g. 15000"
+              min="1"
+              max="999999999999"
+              step="1"
+            />
+            <span class="error-msg" id="error-amount" aria-live="polite"></span>
+          </div>
+
+          <!-- Category — options swapped by JS based on type -->
+          <div class="form-group">
+            <label for="select-category">Category</label>
+            <select id="select-category">
+              <option value="" disabled selected>Select a category</option>
+              <!-- Expense options (default) — JS repopulates on type switch -->
+              <option value="Food">🍔 Food</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Shopping">🛍️ Shopping</option>
+              <option value="Bills">💡 Bills</option>
+              <option value="Entertainment">🎮 Entertainment</option>
+              <option value="Others">📦 Others</option>
+            </select>
+            <span class="error-msg" id="error-category" aria-live="polite"></span>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <label for="input-date">Date</label>
+            <input id="input-date" type="date" />
+            <span class="error-msg" id="error-date" aria-live="polite"></span>
+          </div>
+
+          <button type="submit" id="btn-submit">Save Expense</button>
+        </form>
+
+        <!-- Success toast — shown for 3 seconds after a successful save -->
+        <div id="toast-success" hidden>
+          ✅ Saved successfully!
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           Panel: History
+           Shows the filterable transaction list
+      =========================================== -->
+      <section id="panel-history" class="tab-panel" role="tabpanel" aria-labelledby="tab-history" hidden>
+
+        <!-- Search — filters transaction list by name in real-time -->
+        <div class="search-bar">
+          <input
+            id="search-history"
+            type="text"
+            placeholder="🔍 Search by name..."
+            autocomplete="off"
+            aria-label="Search transactions by name"
+          />
+        </div>
+
+        <!-- Filter Bar mirror -->
+        <div class="filter-bar-mirror">
+          <label for="filter-preset-history" class="sr-only">Filter by date</label>
+          <select id="filter-preset-history" aria-label="Date filter preset (history)" aria-controls="expense-list">
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+
+          <div id="filter-custom-history" class="filter-custom" hidden>
+            <label for="filter-start-history">From</label>
+            <input id="filter-start-history" type="date" aria-label="Filter start date (history)" />
+            <label for="filter-end-history">To</label>
+            <input id="filter-end-history" type="date" aria-label="Filter end date (history)" />
+            <span id="filter-range-error-history" class="error-msg" hidden>
+              Start date cannot be later than end date.
+            </span>
+          </div>
+        </div>
+
+        <!-- Transaction list — populated by renderExpenseList() in script.js -->
+        <ul id="expense-list" aria-label="Transaction history" aria-live="polite">
+        </ul>
+
+        <!-- Empty state -->
+        <p id="list-empty" class="list-empty" hidden>
+          No transactions found for the selected period.
+        </p>
+
+      </section>
+
+    </main>
+
+    <!-- App logic -->
+    <script src="script.js" type="module"></script>
+  </body>
+</html>

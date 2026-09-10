@@ -1,0 +1,796 @@
+/* ==========================================================================
+   Cashlytics — style.css
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CSS Custom Properties
+   ========================================================================== */
+
+:root {
+  /* --- Category colours (pastel) --- */
+  --color-food:          #FFB3C1; /* pastel pink   */
+  --color-transport:     #C9B8FF; /* lavender      */
+  --color-shopping:      #B5EAD7; /* mint green    */
+  --color-bills:         #AEE1F9; /* baby blue     */
+  --color-entertainment: #FDFD96; /* soft yellow   */
+  --color-others:        #FFD7B5; /* soft peach    */
+
+  /* --- Background & surface colours --- */
+  --color-bg:            #F7F5FF;
+  --color-surface:       #FFFFFF;
+  --color-surface-alt:   #F0EBF8;
+
+  /* --- Text colours --- */
+  --color-text-primary:  #2D2640;
+  --color-text-secondary:#6B6380;
+  --color-text-error:    #C0392B;
+
+  /* --- Shadow --- */
+  --shadow-sm:  0 2px  6px rgba(0, 0, 0, 0.07);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 16px rgba(0, 0, 0, 0.12);
+
+  /* --- Border radius --- */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+
+  /* --- Transitions --- */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* --- Typography scale (Change 5: Nunito) --- */
+  --font-family:  'Nunito', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+}
+
+/* ==========================================================================
+   2. CSS Reset & Box Model
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin:     0;
+  padding:    0;
+}
+
+ul, ol { list-style: none; }
+
+button,
+input,
+select,
+textarea {
+  font:       inherit;
+  border:     none;
+  background: transparent;
+  outline:    none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+a { text-decoration: none; color: inherit; }
+
+img, svg { display: block; max-width: 100%; }
+
+/* ==========================================================================
+   3. Base Typography (Change 5: Nunito weights)
+   ========================================================================== */
+
+html { font-size: 16px; }
+
+body {
+  font-family:      var(--font-family);
+  font-size:        var(--font-size-md);
+  color:            var(--color-text-primary);
+  background-color: var(--color-bg);
+  line-height:      1.6;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  font-weight: 700;
+  line-height: 1.25;
+  color:       var(--color-text-primary);
+}
+
+p {
+  font-size:   var(--font-size-md);
+  color:       var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+small {
+  font-size: var(--font-size-xs);
+  color:     var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   3a. App Header — Change 3
+   ========================================================================== */
+
+#app-header {
+  text-align:       center;
+  padding:          0.6rem 1rem;
+  background:       var(--color-surface);
+  border-bottom:    1px solid rgba(201, 184, 255, 0.3);
+  /* Fixed positioning set per breakpoint below */
+}
+
+.app-title {
+  font-size:      1.6rem;
+  font-weight:    800;
+  letter-spacing: -0.5px;
+  color:          var(--color-text-primary);
+  line-height:    1.2;
+}
+
+.app-tagline {
+  font-size:  0.8rem;
+  color:      var(--color-text-secondary);
+  margin-top: 0.1rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. Cards & Panel Surfaces
+   ========================================================================== */
+
+.card {
+  background-color: var(--color-surface);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--shadow-md);
+  padding:          1.25rem 1.5rem;
+  transition:       box-shadow var(--transition-normal),
+                    transform  var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform:  translateY(-2px);
+}
+
+.tab-panel {
+  background-color: var(--color-surface);
+  border-radius:    var(--radius-lg);
+  box-shadow:       var(--shadow-md);
+  padding:          1.5rem;
+}
+
+/* ==========================================================================
+   5. Buttons
+   ========================================================================== */
+
+button {
+  cursor:           pointer;
+  border-radius:    var(--radius-md);
+  padding:          0.5rem 1.25rem;
+  font-size:        var(--font-size-sm);
+  font-weight:      600;
+  color:            var(--color-text-primary);
+  background-color: var(--color-surface-alt);
+  transition:       background-color var(--transition-fast),
+                    box-shadow       var(--transition-fast),
+                    transform        var(--transition-fast);
+}
+
+button:hover {
+  background-color: var(--color-transport);
+  box-shadow:       var(--shadow-sm);
+  transform:        translateY(-1px);
+}
+
+button:active {
+  transform:  translateY(0);
+  box-shadow: none;
+}
+
+button[type="submit"],
+.btn-primary {
+  background-color: var(--color-transport);
+  color:            var(--color-text-primary);
+  padding:          0.625rem 1.5rem;
+  font-weight:      700;
+}
+
+button[type="submit"]:hover,
+.btn-primary:hover {
+  background-color: #b3a3f5;
+}
+
+.btn-danger {
+  background-color: #FFB3B3;
+  color:            var(--color-text-primary);
+}
+
+.btn-danger:hover { background-color: #ff9999; }
+
+#tab-bar button {
+  border-radius:    var(--radius-sm);
+  background-color: transparent;
+  padding:          0.5rem 1rem;
+  transition:       background-color var(--transition-normal),
+                    color            var(--transition-normal),
+                    font-weight      var(--transition-normal);
+}
+
+#tab-bar button:hover {
+  background-color: var(--color-surface-alt);
+  transform:        none;
+  box-shadow:       none;
+}
+
+#tab-bar button.tab--active {
+  background-color: var(--color-transport);
+  font-weight:      700;
+  box-shadow:       var(--shadow-sm);
+}
+
+/* ==========================================================================
+   5a. Type Toggle — Change 4
+   ========================================================================== */
+
+.type-toggle {
+  display:       flex;
+  gap:           0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.type-btn {
+  flex:         1;
+  padding:      0.5rem;
+  border-radius: var(--radius-md);
+  border:       2px solid transparent;
+  background:   var(--color-surface-alt);
+  font-weight:  600;
+  font-size:    var(--font-size-sm);
+  transition:   all var(--transition-fast);
+}
+
+.type-btn--active[data-type="expense"] {
+  background:   #FFB3C1;
+  border-color: #ff8fab;
+}
+
+.type-btn--active[data-type="income"] {
+  background:   #B8F0B8;
+  border-color: #74c474;
+}
+
+/* ==========================================================================
+   6. Inputs & Select
+   ========================================================================== */
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  width:            100%;
+  background-color: var(--color-surface);
+  border:           1.5px solid #d4ccf0;
+  border-radius:    var(--radius-md);
+  padding:          0.5rem 0.875rem;
+  color:            var(--color-text-primary);
+  transition:       border-color var(--transition-fast),
+                    box-shadow   var(--transition-fast);
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: var(--color-transport);
+  box-shadow:   0 0 0 3px rgba(201, 184, 255, 0.35);
+  outline:      none;
+}
+
+input.is-invalid,
+select.is-invalid {
+  border-color: var(--color-text-error);
+  box-shadow:   0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+select {
+  background-image:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236B6380' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:   no-repeat;
+  background-position: right 0.875rem center;
+  padding-right:       2.25rem;
+}
+
+/* ==========================================================================
+   7. Form Field Wrapper & Inline Validation Messages
+   ========================================================================== */
+
+.form-group {
+  display:        flex;
+  flex-direction: column;
+  gap:            0.25rem;
+  margin-bottom:  1rem;
+}
+
+.form-group label {
+  font-size:   var(--font-size-sm);
+  font-weight: 700;
+  color:       var(--color-text-primary);
+}
+
+.error-msg {
+  font-size:  var(--font-size-xs);
+  color:      var(--color-text-error);
+  display:    none;
+  margin-top: 0.125rem;
+}
+
+.error-msg.visible { display: block; }
+
+/* ==========================================================================
+   8. Toast — Success Confirmation
+   ========================================================================== */
+
+#toast-success {
+  display:          none;
+  background-color: var(--color-shopping);
+  color:            var(--color-text-primary);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--shadow-sm);
+  padding:          0.75rem 1.25rem;
+  font-size:        var(--font-size-sm);
+  font-weight:      700;
+  text-align:       center;
+  margin-top:       1rem;
+  transition:       opacity var(--transition-normal);
+}
+
+/* ==========================================================================
+   9. Inline Error Banners
+   ========================================================================== */
+
+.error-banner,
+#error-storage,
+#error-data {
+  display:          none;
+  background-color: #FFB3B3;
+  color:            var(--color-text-primary);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--shadow-sm);
+  padding:          0.75rem 1.25rem;
+  font-size:        var(--font-size-sm);
+  margin-bottom:    1rem;
+}
+
+.error-banner.visible,
+#error-storage.visible,
+#error-data.visible { display: block; }
+
+/* ==========================================================================
+   10. Chart Container — Change 1
+   ========================================================================== */
+
+.chart-container {
+  background-color: var(--color-surface);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--shadow-md);
+  padding:          1.25rem;
+  margin-top:       1.5rem;
+}
+
+.chart-controls {
+  display:         flex;
+  gap:             0.5rem;
+  flex-wrap:       wrap;
+  justify-content: center;
+  margin-bottom:   0.75rem;
+}
+
+/* Change 1: .chart-area wrapper with explicit size */
+.chart-area {
+  max-width:  320px;
+  margin:     0 auto;
+  width:      100%;
+  height:     300px;
+  position:   relative;
+}
+
+#chart-canvas {
+  border-radius: var(--radius-md);
+  display:       block;
+  width:         100% !important;
+  height:        100% !important;
+}
+
+#chart-error {
+  display:          none;
+  background-color: var(--color-surface-alt);
+  border-radius:    var(--radius-md);
+  padding:          1.5rem;
+  text-align:       center;
+  color:            var(--color-text-secondary);
+  font-size:        var(--font-size-sm);
+}
+
+/* ==========================================================================
+   11. Category Icon Badges — Change 2
+   ========================================================================== */
+
+/* Old .category-badge kept for any lingering references */
+.category-badge {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           0.25rem;
+  border-radius: var(--radius-sm);
+  padding:       0.2rem 0.6rem;
+  font-size:     var(--font-size-xs);
+  font-weight:   600;
+}
+
+/* New circular icon badge */
+.cat-icon {
+  display:         inline-flex;
+  align-items:     center;
+  justify-content: center;
+  width:           32px;
+  height:          32px;
+  border-radius:   50%;
+  font-size:       1rem;
+  flex-shrink:     0;
+  box-shadow:      0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.expense-category-label {
+  font-size:   var(--font-size-xs);
+  font-weight: 700;
+  color:       var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   11a. Stat Cards — Change 4
+   ========================================================================== */
+
+.stat-card {
+  background-color: var(--color-surface);
+  border-radius:    var(--radius-md);
+  box-shadow:       var(--shadow-md);
+  padding:          1rem 1.25rem;
+  transition:       box-shadow var(--transition-normal),
+                    transform  var(--transition-normal);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform:  translateY(-2px);
+}
+
+.stat-label {
+  font-size:   var(--font-size-xs);
+  font-weight: 700;
+  color:       var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size:   var(--font-size-xl);
+  font-weight: 800;
+  color:       var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.stat-income-value  { color: #2e7d32; }
+.stat-expense-value { color: #c62828; }
+
+/* Balance coloring applied dynamically via JS */
+.stat-balance-positive { color: #2e7d32; }
+.stat-balance-negative { color: #c62828; }
+
+/* ==========================================================================
+   11b. Transaction List Income/Expense — Change 4
+   ========================================================================== */
+
+.tx-income  { border-left: 3px solid #74c474; }
+.tx-expense { border-left: 3px solid #ff8fab; }
+
+.tx-income  .expense-amount { color: #2e7d32; font-weight: 800; }
+.tx-expense .expense-amount { color: #c62828; font-weight: 800; }
+
+/* ==========================================================================
+   11c. Search Bar — History Panel
+   ========================================================================== */
+
+.search-bar {
+  margin-bottom: 0.75rem;
+}
+
+.search-bar input {
+  width:            100%;
+  background-color: var(--color-surface);
+  border:           1.5px solid #d4ccf0;
+  border-radius:    var(--radius-md);
+  padding:          0.5rem 0.875rem;
+  color:            var(--color-text-primary);
+  font-size:        var(--font-size-sm);
+  transition:       border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.search-bar input:focus {
+  border-color: var(--color-transport);
+  box-shadow:   0 0 0 3px rgba(201, 184, 255, 0.35);
+  outline:      none;
+}
+
+/* ==========================================================================
+   11d. Empty State Links
+   ========================================================================== */
+
+.empty-state-link {
+  color:           #9b82ff;
+  font-weight:     700;
+  cursor:          pointer;
+  text-decoration: underline dotted;
+  transition:      color var(--transition-fast);
+}
+
+.empty-state-link:hover {
+  color: #7c5cbf;
+}
+
+/* ==========================================================================
+   12. Responsive Layout — Desktop (≥ 768 px)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+
+  /* Change 3: header fixed at top, tab bar below it */
+  #app-header {
+    position:        fixed;
+    top:             0;
+    left:            0;
+    right:           0;
+    z-index:         101;
+    height:          64px;
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    justify-content: center;
+    padding:         0 2rem;
+  }
+
+  #tab-bar {
+    position:         fixed;
+    top:              64px; /* below the header */
+    left:             0;
+    right:            0;
+    z-index:          100;
+    display:          flex;
+    align-items:      center;
+    justify-content:  center;
+    gap:              0.5rem;
+    padding:          0.5rem 2rem;
+    background-color: var(--color-surface);
+    box-shadow:       var(--shadow-md);
+    height:           56px;
+  }
+
+  /* Push content below both fixed bars: 64 + 56 = 120px */
+  body {
+    padding-top: 120px;
+  }
+
+  #app-wrapper,
+  main,
+  .app-main {
+    max-width:     1100px;
+    margin-inline: auto;
+    padding:       1.5rem 2rem;
+  }
+
+  /* 3-column stat cards grid */
+  #panel-dashboard .stat-cards {
+    display:               grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:                   1rem;
+    margin-bottom:         1.5rem;
+  }
+
+  /* Top category card spans all 3 columns */
+  #panel-dashboard .stat-top-card {
+    grid-column: span 3;
+  }
+
+  /* Chart: explicit height on desktop */
+  .chart-area {
+    height: 300px;
+  }
+
+  /* Expense list — table-style row layout on desktop */
+  #expense-list .expense-item {
+    display:               grid;
+    grid-template-columns: auto 1fr auto auto auto auto;
+    align-items:           center;
+    gap:                   1rem;
+    padding:               0.75rem 1rem;
+  }
+
+  #tab-bar button.tab--active {
+    background-color: var(--color-transport);
+    font-weight:      700;
+    box-shadow:       var(--shadow-sm),
+                      inset 0 -3px 0 #9b82ff;
+  }
+
+}
+
+/* ==========================================================================
+   13. Responsive Layout — Mobile (< 768 px)
+   ========================================================================== */
+
+@media (max-width: 767px) {
+
+  /* Change 3: header fixed at top on mobile too */
+  #app-header {
+    position:        fixed;
+    top:             0;
+    left:            0;
+    right:           0;
+    z-index:         101;
+    height:          56px;
+    display:         flex;
+    flex-direction:  column;
+    align-items:     center;
+    justify-content: center;
+    padding:         0 1rem;
+    background:      var(--color-surface);
+    border-bottom:   1px solid rgba(201, 184, 255, 0.3);
+    box-shadow:      var(--shadow-sm);
+  }
+
+  /* Tab bar at bottom on mobile */
+  #tab-bar {
+    position:         fixed;
+    bottom:           0;
+    left:             0;
+    right:            0;
+    z-index:          100;
+    display:          flex;
+    justify-content:  center;
+    align-items:      center;
+    gap:              0.25rem;
+    min-height:       48px;
+    padding:          0.25rem 0.5rem;
+    background-color: var(--color-surface);
+    box-shadow:       0 -2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  #tab-bar button {
+    flex:          1;
+    border-radius: var(--radius-sm);
+    padding:       0.4rem 0.25rem;
+    font-size:     var(--font-size-xs);
+    text-align:    center;
+  }
+
+  /* Push content below fixed header (56px) and above fixed tab bar (56px) */
+  body {
+    padding-top:    56px;
+    padding-bottom: 56px;
+    padding-left:   0.75rem;
+    padding-right:  0.75rem;
+    overflow-x:     hidden;
+  }
+
+  *,
+  *::before,
+  *::after { max-width: 100%; }
+
+  .tab-panel {
+    padding:       1rem 0.75rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Stat cards — single column */
+  #panel-dashboard .stat-cards {
+    display:               grid;
+    grid-template-columns: 1fr;
+    gap:                   0.75rem;
+    margin-bottom:         1rem;
+  }
+
+  /* Change 1: chart area on mobile */
+  .chart-area {
+    max-width: 100%;
+    height:    240px;
+  }
+
+  .chart-container {
+    padding:  0.75rem;
+    overflow: hidden;
+  }
+
+  /* Expense list — stacked card layout */
+  #expense-list .expense-item {
+    display:        flex;
+    flex-direction: column;
+    gap:            0.4rem;
+    padding:        0.875rem 1rem;
+    border-radius:  var(--radius-md);
+    background:     var(--color-surface);
+    box-shadow:     var(--shadow-sm);
+    margin-bottom:  0.625rem;
+  }
+
+  .expense-item .expense-name {
+    font-weight: 800;
+    font-size:   var(--font-size-md);
+    word-break:  break-word;
+  }
+
+  .expense-item .expense-amount {
+    font-size:   var(--font-size-lg);
+    font-weight: 800;
+    color:       var(--color-text-primary);
+  }
+
+  .expense-item .expense-meta {
+    display:     flex;
+    flex-wrap:   wrap;
+    gap:         0.5rem;
+    align-items: center;
+    font-size:   var(--font-size-xs);
+    color:       var(--color-text-secondary);
+  }
+
+  .expense-item .expense-actions {
+    display:         flex;
+    gap:             0.5rem;
+    justify-content: flex-end;
+    margin-top:      0.25rem;
+  }
+
+  .expense-item .expense-actions button {
+    padding:   0.35rem 0.75rem;
+    font-size: var(--font-size-xs);
+  }
+
+  /* Filter bar — stack vertically */
+  #filter-bar {
+    display:        flex;
+    flex-direction: column;
+    gap:            0.5rem;
+  }
+
+  #filter-start,
+  #filter-end { width: 100%; }
+
+  #tab-bar button.tab--active {
+    background-color: var(--color-transport);
+    font-weight:      700;
+    box-shadow:       inset 0 3px 0 #9b82ff;
+  }
+
+  .form-group input,
+  .form-group select { font-size: 16px; }
+
+  /* Chart controls wrap nicely on mobile */
+  .chart-controls {
+    flex-direction: column;
+    align-items:    stretch;
+  }
+
+}
+
+/* ==========================================================================
+   14. Viewport-width transition guard
+   ========================================================================== */
+
+html,
+body {
+  overflow-x: hidden;
+  width:      100%;
+}
